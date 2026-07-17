@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useBookings, useCreateBooking } from '../../hooks/useBookings';
+import { ConfirmDialog } from '../../components/ConfirmDialog';
 import type { Room } from '../../types';
 
 const HOURS = Array.from({ length: 11 }, (_, i) => 8 + i);
@@ -23,11 +24,13 @@ function addDays(dateISO: string, days: number) {
 export function RoomScheduleGrid({ room }: { room: Room }) {
   const today = todayISO();
   const [date, setDate] = useState(today);
+  const [pendingHour, setPendingHour] = useState<number | null>(null);
   const { data: bookings, isLoading } = useBookings(room.id, date);
   const createBooking = useCreateBooking();
 
   const bookingByHour = new Map(bookings?.map((b) => [b.hour, b]));
   const isToday = date === today;
+  const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('hu-HU');
 
   return (
     <div className="mt-4 border-t border-gray-200 pt-4">
@@ -75,7 +78,7 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
               <button
                 key={hour}
                 disabled={isBooked || createBooking.isPending}
-                onClick={() => createBooking.mutate({ roomId: room.id, date, hour })}
+                onClick={() => setPendingHour(hour)}
                 className={
                   isBooked
                     ? 'border border-gray-200 rounded px-2 py-2 text-sm bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -91,6 +94,17 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
       )}
       {createBooking.isError && (
         <p className="text-red-600 text-sm mt-2">Hiba történt a foglaláskor.</p>
+      )}
+      {pendingHour !== null && (
+        <ConfirmDialog
+          title="Foglalás megerősítése"
+          description={`${room.name} — ${formattedDate}, ${pendingHour}:00`}
+          onCancel={() => setPendingHour(null)}
+          onConfirm={() => {
+            createBooking.mutate({ roomId: room.id, date, hour: pendingHour });
+            setPendingHour(null);
+          }}
+        />
       )}
     </div>
   );
