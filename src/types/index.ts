@@ -10,7 +10,7 @@ export interface Booking {
   roomId: string;
   userId: string;
   userName: string;
-  startTime: Date;
-  endTime: Date;
+  date: string; // YYYY-MM-DD
+  hour: number; // 8-18
   status: 'confirmed' | 'cancelled';
 }
