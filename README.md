@@ -2,6 +2,8 @@
 
 Egyszerű szoba-/tárgyalófoglaló alkalmazás coworking irodák számára. Bejelentkezett felhasználók megnézhetik a termeket, óránkénti bontásban lefoglalhatnak egy szabad időpontot, és kezelhetik a saját foglalásaikat.
 
+🔗 **Élő demo:** https://coworking-booking-95b46.web.app
+
 ## Funkciók
 
 - **Bejelentkezés**: email/jelszó és Google fiókkal
