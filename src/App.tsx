@@ -1,6 +1,7 @@
 import { useAuth } from './hooks/useAuth';
 import { Login } from './features/auth/Login';
 import { RoomList } from './features/rooms/RoomList';
+import { MyBookings } from './features/rooms/MyBookings';
 import { signOut } from 'firebase/auth';
 import { auth } from './lib/firebase';
 
@@ -30,6 +31,7 @@ function App() {
         </div>
       </header>
       <div className="max-w-2xl mx-auto px-6 py-6">
+        <MyBookings />
         <RoomList />
       </div>
     </div>
