@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useBookings, useCreateBooking } from '../../hooks/useBookings';
-import { ConfirmDialog } from '../../components/ConfirmDialog';
+import { BookingDialog } from './BookingDialog';
+import { BookingInfoDialog } from './BookingInfoDialog';
 import { Skeleton } from '../../components/Skeleton';
-import type { Room } from '../../types';
+import type { Booking, Room } from '../../types';
 
 const HOURS = Array.from({ length: 11 }, (_, i) => 8 + i);
 
@@ -26,6 +27,7 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
   const today = todayISO();
   const [date, setDate] = useState(today);
   const [pendingHour, setPendingHour] = useState<number | null>(null);
+  const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
   const { data: bookings, isLoading } = useBookings(room.id, date);
   const createBooking = useCreateBooking();
 
@@ -82,11 +84,11 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
             return (
               <button
                 key={hour}
-                disabled={isBooked || createBooking.isPending}
-                onClick={() => setPendingHour(hour)}
+                disabled={createBooking.isPending}
+                onClick={() => (isBooked ? setViewingBooking(booking) : setPendingHour(hour))}
                 className={
                   isBooked
-                    ? 'border border-gray-200 rounded px-2 py-2 text-sm bg-gray-100 text-gray-400 cursor-not-allowed'
+                    ? 'border border-gray-200 rounded px-2 py-2 text-sm bg-gray-100 text-gray-500 hover:bg-gray-200'
                     : 'border border-gray-300 rounded px-2 py-2 text-sm bg-white text-gray-900 hover:bg-indigo-50 hover:border-indigo-300'
                 }
               >
@@ -105,14 +107,22 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
         </p>
       )}
       {pendingHour !== null && (
-        <ConfirmDialog
+        <BookingDialog
           title="Foglalás megerősítése"
           description={`${room.name} — ${formattedDate}, ${pendingHour}:00`}
           onCancel={() => setPendingHour(null)}
-          onConfirm={() => {
-            createBooking.mutate({ roomId: room.id, date, hour: pendingHour });
+          onConfirm={(subject) => {
+            createBooking.mutate({ roomId: room.id, date, hour: pendingHour, subject });
             setPendingHour(null);
           }}
+        />
+      )}
+      {viewingBooking && (
+        <BookingInfoDialog
+          room={room}
+          booking={viewingBooking}
+          formattedDate={formattedDate}
+          onClose={() => setViewingBooking(null)}
         />
       )}
     </div>

@@ -14,7 +14,9 @@ service cloud.firestore {
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.roomId is string
         && request.resource.data.date is string
-        && request.resource.data.hour is int;
+        && request.resource.data.hour is int
+        && request.resource.data.subject is string
+        && request.resource.data.subject.size() > 0;
 
       allow delete: if request.auth != null
         && resource.data.userId == request.auth.uid;

@@ -44,7 +44,17 @@ export function useCreateBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ roomId, date, hour }: { roomId: string; date: string; hour: number }) => {
+    mutationFn: async ({
+      roomId,
+      date,
+      hour,
+      subject,
+    }: {
+      roomId: string;
+      date: string;
+      hour: number;
+      subject: string;
+    }) => {
       const user = auth.currentUser;
       if (!user) throw new Error('Nincs bejelentkezve.');
 
@@ -62,6 +72,7 @@ export function useCreateBooking() {
           roomId,
           date,
           hour,
+          subject,
           userId: user.uid,
           userName: user.email ?? 'Ismeretlen',
           status: 'confirmed',

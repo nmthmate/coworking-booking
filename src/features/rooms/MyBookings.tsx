@@ -61,6 +61,7 @@ export function MyBookings() {
                   <p className="text-sm text-gray-600">
                     {new Date(booking.date + 'T00:00:00').toLocaleDateString('hu-HU')}, {booking.hour}:00
                   </p>
+                  {booking.subject && <p className="text-sm text-gray-500 italic">{booking.subject}</p>}
                 </div>
                 <button
                   onClick={() => setPendingCancel(booking)}
