@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc, runTransaction } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import type { Booking } from '../types';
 
@@ -47,18 +47,33 @@ export function useCreateBooking() {
     mutationFn: async ({ roomId, date, hour }: { roomId: string; date: string; hour: number }) => {
       const user = auth.currentUser;
       if (!user) throw new Error('Nincs bejelentkezve.');
-      await addDoc(collection(db, 'bookings'), {
-        roomId,
-        date,
-        hour,
-        userId: user.uid,
-        userName: user.email ?? 'Ismeretlen',
-        status: 'confirmed',
+
+      // Deterministic ID turns "is this slot free?" into an atomic
+      // create-if-absent via the transaction below, closing the race
+      // where two users book the same slot at the same time.
+      const bookingRef = doc(db, 'bookings', `${roomId}_${date}_${hour}`);
+
+      await runTransaction(db, async (transaction) => {
+        const existing = await transaction.get(bookingRef);
+        if (existing.exists()) {
+          throw new Error('already-booked');
+        }
+        transaction.set(bookingRef, {
+          roomId,
+          date,
+          hour,
+          userId: user.uid,
+          userName: user.email ?? 'Ismeretlen',
+          status: 'confirmed',
+        });
       });
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['bookings', variables.roomId, variables.date] });
       queryClient.invalidateQueries({ queryKey: ['myBookings'] });
+    },
+    onError: (_error, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['bookings', variables.roomId, variables.date] });
     },
   });
 }

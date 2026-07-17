@@ -93,7 +93,11 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
         </div>
       )}
       {createBooking.isError && (
-        <p className="text-red-600 text-sm mt-2">Hiba történt a foglaláskor.</p>
+        <p className="text-red-600 text-sm mt-2">
+          {createBooking.error instanceof Error && createBooking.error.message === 'already-booked'
+            ? 'Ezt az időpontot időközben már lefoglalta valaki más.'
+            : 'Hiba történt a foglaláskor.'}
+        </p>
       )}
       {pendingHour !== null && (
         <ConfirmDialog
