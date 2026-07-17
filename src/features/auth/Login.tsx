@@ -48,43 +48,45 @@ export function Login() {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-20 p-6 border rounded-lg">
-      <h1 className="text-xl font-medium mb-4">
-        {isRegister ? 'Regisztráció' : 'Bejelentkezés'}
-      </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border rounded px-3 py-2"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Jelszó"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border rounded px-3 py-2"
-          required
-        />
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-        <button type="submit" className="bg-black text-white rounded px-3 py-2">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <div className="w-full max-w-sm bg-white text-gray-900 p-6 border border-gray-200 rounded-lg shadow-sm">
+        <h1 className="text-xl font-medium mb-4">
           {isRegister ? 'Regisztráció' : 'Bejelentkezés'}
+        </h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 placeholder-gray-400"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Jelszó"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 placeholder-gray-400"
+            required
+          />
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+          <button type="submit" className="bg-black text-white rounded px-3 py-2">
+            {isRegister ? 'Regisztráció' : 'Bejelentkezés'}
+          </button>
+        </form>
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full mt-3 border border-gray-300 rounded px-3 py-2 bg-white text-gray-900"
+        >
+          Bejelentkezés Google-lel
         </button>
-      </form>
-      <button
-        onClick={handleGoogleLogin}
-        className="w-full mt-3 border rounded px-3 py-2"
-      >
-        Bejelentkezés Google-lel
-      </button>
-      <p className="text-sm mt-3 text-center">
-        <button onClick={() => setIsRegister(!isRegister)} className="underline">
-          {isRegister ? 'Már van fiókod? Jelentkezz be' : 'Nincs még fiókod? Regisztrálj'}
-        </button>
-      </p>
+        <p className="text-sm mt-3 text-center">
+          <button onClick={() => setIsRegister(!isRegister)} className="underline text-gray-900">
+            {isRegister ? 'Már van fiókod? Jelentkezz be' : 'Nincs még fiókod? Regisztrálj'}
+          </button>
+        </p>
+      </div>
     </div>
   );
 }
