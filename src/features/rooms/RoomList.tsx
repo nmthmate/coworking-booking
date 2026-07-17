@@ -1,12 +1,25 @@
 import { useState } from 'react';
 import { useRooms } from '../../hooks/useRooms';
 import { RoomScheduleGrid } from './RoomScheduleGrid';
+import { Skeleton } from '../../components/Skeleton';
 
 export function RoomList() {
   const { data: rooms, isLoading, error } = useRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
-  if (isLoading) return <p className="mt-6 text-gray-500">Termek betöltése...</p>;
+  if (isLoading) {
+    return (
+      <div className="grid gap-3 mt-6">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="border border-gray-200 rounded-lg p-4 bg-white">
+            <Skeleton className="h-4 w-32 mb-2" />
+            <Skeleton className="h-3 w-48 mb-2" />
+            <Skeleton className="h-3 w-24" />
+          </div>
+        ))}
+      </div>
+    );
+  }
   if (error) return <p className="mt-6 text-red-600">Hiba történt a termek betöltésekor.</p>;
 
   return (

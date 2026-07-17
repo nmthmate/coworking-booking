@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useBookings, useCreateBooking } from '../../hooks/useBookings';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
+import { Skeleton } from '../../components/Skeleton';
 import type { Room } from '../../types';
 
 const HOURS = Array.from({ length: 11 }, (_, i) => 8 + i);
@@ -68,7 +69,11 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
         )}
       </div>
       {isLoading ? (
-        <p className="text-gray-500 text-sm">Betöltés...</p>
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+          {HOURS.map((hour) => (
+            <Skeleton key={hour} className="h-10" />
+          ))}
+        </div>
       ) : (
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {HOURS.map((hour) => {

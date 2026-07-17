@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useMyBookings, useCancelBooking } from '../../hooks/useBookings';
 import { useRooms } from '../../hooks/useRooms';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
+import { Skeleton } from '../../components/Skeleton';
 import type { Booking } from '../../types';
 
 function formatBooking(booking: Booking, roomName: string) {
@@ -27,9 +28,25 @@ export function MyBookings() {
     <div className="mb-6">
       <h2 className="font-medium mb-2">Saját foglalásaim</h2>
       {isLoading ? (
-        <p className="text-sm text-gray-500">Betöltés...</p>
+        <div className="grid gap-2">
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              className="border border-gray-200 rounded-lg p-3 bg-white flex justify-between items-center"
+            >
+              <div className="flex-1">
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-3 w-40" />
+              </div>
+              <Skeleton className="h-8 w-20" />
+            </div>
+          ))}
+        </div>
       ) : sorted.length === 0 ? (
-        <p className="text-sm text-gray-500">Nincs foglalásod.</p>
+        <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
+          <p className="text-2xl mb-1">🗓️</p>
+          <p className="text-sm text-gray-500">Nincs foglalásod.</p>
+        </div>
       ) : (
         <div className="grid gap-2">
           {sorted.map((booking) => {
