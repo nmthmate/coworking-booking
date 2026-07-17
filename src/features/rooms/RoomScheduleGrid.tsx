@@ -61,7 +61,7 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
           <button
             type="button"
             onClick={() => setDate(today)}
-            className="text-sm underline text-gray-600"
+            className="text-sm underline text-indigo-600 hover:text-indigo-700"
           >
             Ma
           </button>
@@ -82,7 +82,7 @@ export function RoomScheduleGrid({ room }: { room: Room }) {
                 className={
                   isBooked
                     ? 'border border-gray-200 rounded px-2 py-2 text-sm bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'border border-gray-300 rounded px-2 py-2 text-sm bg-white text-gray-900 hover:bg-gray-50'
+                    : 'border border-gray-300 rounded px-2 py-2 text-sm bg-white text-gray-900 hover:bg-indigo-50 hover:border-indigo-300'
                 }
               >
                 {hour}:00

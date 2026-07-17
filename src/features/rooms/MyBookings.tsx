@@ -64,6 +64,7 @@ export function MyBookings() {
             roomNameById.get(pendingCancel.roomId) ?? 'Ismeretlen terem',
           )}
           confirmLabel="Lemondás"
+          variant="danger"
           onCancel={() => setPendingCancel(null)}
           onConfirm={() => {
             cancelBooking.mutate(pendingCancel);

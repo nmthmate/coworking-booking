@@ -14,7 +14,14 @@ export function RoomList() {
       {rooms?.map((room) => {
         const isSelected = room.id === selectedRoomId;
         return (
-          <div key={room.id} className="border border-gray-200 rounded-lg p-4 bg-white text-gray-900">
+          <div
+            key={room.id}
+            className={
+              isSelected
+                ? 'border border-indigo-300 rounded-lg p-4 bg-white text-gray-900 ring-1 ring-indigo-100'
+                : 'border border-gray-200 rounded-lg p-4 bg-white text-gray-900'
+            }
+          >
             <button
               onClick={() => setSelectedRoomId(isSelected ? null : room.id)}
               className="w-full text-left"

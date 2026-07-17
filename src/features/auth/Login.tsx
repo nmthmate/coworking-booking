@@ -59,7 +59,7 @@ export function Login() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 placeholder-gray-400"
+            className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             required
           />
           <input
@@ -67,22 +67,22 @@ export function Login() {
             placeholder="Jelszó"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 placeholder-gray-400"
+            className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             required
           />
           {error && <p className="text-red-600 text-sm">{error}</p>}
-          <button type="submit" className="bg-black text-white rounded px-3 py-2">
+          <button type="submit" className="bg-indigo-600 text-white rounded px-3 py-2 hover:bg-indigo-700">
             {isRegister ? 'Regisztráció' : 'Bejelentkezés'}
           </button>
         </form>
         <button
           onClick={handleGoogleLogin}
-          className="w-full mt-3 border border-gray-300 rounded px-3 py-2 bg-white text-gray-900"
+          className="w-full mt-3 border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 hover:bg-gray-50"
         >
           Bejelentkezés Google-lel
         </button>
         <p className="text-sm mt-3 text-center">
-          <button onClick={() => setIsRegister(!isRegister)} className="underline text-gray-900">
+          <button onClick={() => setIsRegister(!isRegister)} className="underline text-indigo-600 hover:text-indigo-700">
             {isRegister ? 'Már van fiókod? Jelentkezz be' : 'Nincs még fiókod? Regisztrálj'}
           </button>
         </p>
