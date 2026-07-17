@@ -1,75 +1,75 @@
-# React + TypeScript + Vite
+# Coworking Booking
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Egyszerű szoba-/tárgyalófoglaló alkalmazás coworking irodák számára. Bejelentkezett felhasználók megnézhetik a termeket, óránkénti bontásban lefoglalhatnak egy szabad időpontot, és kezelhetik a saját foglalásaikat.
 
-Currently, two official plugins are available:
+## Funkciók
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Bejelentkezés**: email/jelszó és Google fiókkal
+- **Termek listája**: Firestore-ból betöltve, kapacitással és leírással
+- **Foglalási órarács**: napi bontás (8:00–18:00), dátumválasztóval (előre/vissza nap, "Ma" gomb)
+- **Foglalás megerősítéssel**: a foglaláshoz kötelező tárgyat megadni, majd egy megerősítő ablakban látod a termet, dátumot és időpontot
+- **Foglalás részletei**: egy már lefoglalt sávra kattintva megnézheted, ki foglalta le, mi a tárgya
+- **Saját foglalásaim**: a bejelentkezett felhasználó összes foglalása egy helyen, lemondási lehetőséggel
+- **Dupla foglalás elleni védelem**: a foglalás Firestore tranzakcióval, determinisztikus dokumentum-ID-vel történik, így két egyidejű foglalási kísérlet közül csak az egyik sikerülhet ugyanarra a sávra
+- **Firestore security rules**: csak bejelentkezett felhasználó olvashat/írhat, foglalást csak a saját nevében hozhat létre, és csak a sajátját mondhatja le
 
-## React Compiler
+## Tech stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [Firebase](https://firebase.google.com/) (Authentication + Firestore)
+- [TanStack Query](https://tanstack.com/query/latest) a szerverállapot kezelésére
 
-## Expanding the ESLint configuration
+## Fejlesztői környezet beállítása
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Függőségek telepítése
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Firebase projekt
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Hozz létre egy Firebase projektet a [Firebase Console](https://console.firebase.google.com/)-ban, majd engedélyezd benne:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Authentication** → Email/Password és Google sign-in módszerek
+- **Firestore Database**
 
+### 3. Környezeti változók
+
+Másold le a `.env.example` fájlt `.env` néven, és töltsd ki a Firebase projekt saját adataival (Project settings → General → Your apps → SDK setup and configuration):
+
+```bash
+cp .env.example .env
+```
+
+### 4. Firestore adatok
+
+Hozz létre egy `rooms` collection-t a Firestore-ban, dokumentumonként az alábbi mezőkkel:
+
+| mező          | típus  | példa               |
+| ------------- | ------ | ------------------- |
+| `name`        | string | `Ares terem`        |
+| `capacity`    | int64  | `8`                 |
+| `description` | string | `Projektor, whiteboard` |
+
+A `bookings` collection-t az alkalmazás hozza létre automatikusan foglaláskor.
+
+### 5. Firestore security rules
+
+A [firestore.rules](firestore.rules) fájl tartalmát másold be a Firebase Console → Firestore Database → Rules fülre, és nyomj Publish-t. (A `firebase.json` a fájlra mutat, ha a Firebase CLI-t használod a megfelelő projektfiókkal bejelentkezve: `firebase deploy --only firestore:rules`.)
+
+### 6. Indítás
+
+```bash
+npm run dev
+```
+
+## Egyéb parancsok
+
+```bash
+npm run build     # típusellenőrzés + production build
+npm run lint      # ESLint
+npm run preview   # production build helyi megtekintése
 ```
