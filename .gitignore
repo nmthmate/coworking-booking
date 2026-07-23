@@ -28,4 +28,4 @@ dist-ssr
 .env.local
 
 # Firebase CLI cache
-.firebase
+.firebase.claude/
